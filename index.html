@@ -39,6 +39,15 @@
       <div class="heading-badge"><span class="pulse-dot"></span> Prototype <span class="badge-divider"></span> v0.1</div>
     </section>
 
+    
+    <section class="execution-input-panel" aria-label="Workflow test inputs">
+      <div class="execution-input-copy">
+        <span class="input-panel-icon">↳</span>
+        <div><strong>Sinov uchun kiruvchi matn</strong><small>Trigger’dan keyingi bloklarga shu qiymat uzatiladi.</small></div>
+      </div>
+      <textarea id="run-input" rows="2" aria-label="Sinov uchun kiruvchi matn" placeholder="Masalan: Mijoz buyurtma haqida so‘rayapti...">Assalomu alaykum! Menga buyurtma haqida ma’lumot kerak.</textarea>
+    </section>
+
     <section class="studio-layout">
       <div class="canvas-panel">
         <div class="canvas-toolbar"><div class="workflow-name-wrap"><span class="workflow-mini-icon">⌘</span><input id="workflow-name" class="workflow-name" value="Yangi workflow" aria-label="Workflow nomi" maxlength="80"><span class="edit-hint">✎</span></div><div class="canvas-tool-actions"><span class="step-counter"><span id="step-count">4</span> qadam</span><button class="icon-button" id="recenter-button" title="Maydonni qayta markazlash" aria-label="Maydonni qayta markazlash" type="button">⤢</button></div></div>
@@ -49,7 +58,7 @@
       <aside class="inspector-panel">
         <div class="inspector-top"><div class="inspector-eyebrow">QADAM SOZLAMALARI</div><div class="inspector-title-row"><h2 id="inspector-title">Trigger</h2><span class="selected-tag">TANLANGAN</span></div><p id="inspector-subtitle">Workflow boshlanish nuqtasi.</p></div>
         <div class="inspector-body" id="inspector-body"></div>
-        <div class="run-history"><div class="history-heading"><span>OXIRGI TEST</span><span class="history-clock">◷</span></div><div id="run-summary" class="run-summary"><span class="summary-dot neutral"></span><span>Hali test bajarilmadi</span></div><ol class="run-log-list" id="run-log-list"><li class="empty-log">Ishga tushirgandan so‘ng natijalar shu yerda chiqadi.</li></ol></div>
+        <div class="run-history"><div class="history-heading"><span>OXIRGI TEST</span><span class="history-clock">◷</span></div><div id="run-summary" class="run-summary"><span class="summary-dot neutral"></span><span>Hali test bajarilmadi</span></div><div id="run-output" class="run-output" hidden><strong>Natija</strong><p id="run-output-text"></p></div><ol class="run-log-list" id="run-log-list"><li class="empty-log">Ishga tushirgandan so‘ng natijalar shu yerda chiqadi.</li></ol></div>
       </aside>
     </section>
     <footer class="app-footer"><span>© 2026 ZUXRASH AI</span><span>Hozircha demo rejimi · Tashqi xizmatlar hali ulanmagan</span><a href="https://github.com/bekiuz/zuxrash-ai" target="_blank" rel="noreferrer">GitHub ↗</a></footer>
