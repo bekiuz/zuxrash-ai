@@ -61,7 +61,11 @@ function drawConnections(){
   const sx=Number(from.x)+NODE_WIDTH,sy=Number(from.y)+51,tx=Number(to.x),ty=Number(to.y)+51;
   const bend=Math.max(45,Math.abs(tx-sx)*.45),cx1=sx+bend,cx2=tx-bend;
   const active=from.runtimeState==="complete"&&to.runtimeState==="complete"?" active":"";
-  return '<path class="connection-path'+active+'" d="M '+sx+' '+sy+' C '+cx1+' '+sy+', '+cx2+' '+ty+', '+tx+' '+ty+'"></path><circle class="connection-dot" cx="'+tx+'" cy="'+ty+'" r="3"></circle>';
+  const sourceEdges=state.edges.filter(function(candidate){return candidate.from===from.id;});
+  const edgeIndex=sourceEdges.findIndex(function(candidate){return candidate.id===edge.id;});
+  const branchLabel=from.type==="condition"?(edgeIndex===0?"HA":"YO‘Q"):"";
+  const label=branchLabel?'<text class="connection-label" x="'+((sx+tx)/2)+'" y="'+((sy+ty)/2-10)+'" text-anchor="middle">'+branchLabel+'</text>':"";
+  return '<path class="connection-path'+active+'" d="M '+sx+' '+sy+' C '+cx1+' '+sy+', '+cx2+' '+ty+', '+tx+' '+ty+'"></path>'+label+'<circle class="connection-dot" cx="'+tx+'" cy="'+ty+'" r="3"></circle>';
  }).join("");
 }
 function field(label,key,value,help,multiline){
@@ -188,8 +192,8 @@ async function runWorkflow(){
     const configuredPrompt=processTemplate((node.settings&&node.settings.prompt)||"So‘rovga javob ber.",context);
     context.previous="Demo natija (haqiqiy AI API ulanmagan): "+(context.input||"Matn kiritilmadi.");
     context.output=context.previous;
-    node.runtimeOutput=context.previous;
-    addLog("AI prompt saqlangan; tashqi modelga so‘rov yuborilmadi.","log-success");
+    node.runtimeOutput=context.previous+"\nPrompt (demo): "+configuredPrompt;
+    addLog("AI prompt tayyorlandi; tashqi modelga so‘rov yuborilmadi.","log-success");
    }else if(node.type==="telegram"){
     const message=processTemplate((node.settings&&node.settings.message)||"{{previous}}",context);
     context.lastIntegration=message;
@@ -236,8 +240,7 @@ async function runWorkflow(){
 
   const unvisited=state.nodes.filter(function(node){return !seen.has(node.id);});
   if(unvisited.length)addLog(unvisited.length+" ta qadam ushbu yo‘lda bajarilmadi (uzilgan yoki boshqa shoxda).","log-error");
-  const lastNode=state.nodes.slice().reverse().find(function(node){return node.runtimeOutput;});
-  const finalOutput=(lastNode&&lastNode.runtimeOutput)||context.previous||"Natija yaratilmagan.";
+  const finalOutput=context.previous||"Natija yaratilmagan.";
   outputText.textContent=finalOutput;
   outputPanel.hidden=false;
   if(token===lastRunToken){
