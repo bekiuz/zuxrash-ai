@@ -10,6 +10,7 @@ const inspectorTitle = document.getElementById("inspector-title");
 const inspectorSubtitle = document.getElementById("inspector-subtitle");
 const addMenu = document.getElementById("add-menu");
 const toastRegion = document.getElementById("toast-region");
+const runInput = document.getElementById("run-input");
 const typeInfo = {
  trigger:{label:"Boshlash",subtitle:"Workflow boshlanish nuqtasi.",icon:"▶",kind:"TRIGGER",color:"trigger",description:"Yangi jarayon shu nuqtadan boshlanadi."},
  ai:{label:"AI javob",subtitle:"AI vazifasi va prompt sozlamalari.",icon:"✦",kind:"AI STEP",color:"ai",description:"Foydalanuvchi topshirig‘ini tahlil qilib, javob tayyorlaydi."},
@@ -80,6 +81,7 @@ function renderInspector(){
  else if(node.type==="delay")html+=field("Kutish (soniya)","setting-delay",node.settings&&node.settings.delay||"5","Demo testda kutish vaqti haqiqiy taymer sifatida ishlatilmaydi.",false);
  else if(node.type==="trigger")html+='<div class="field-group"><span class="field-label">Trigger turi</span><div class="field-static">Qo‘lda ishga tushirish <span style="color:#7fd9b3">· Faol</span></div><span class="field-help">Jadval va webhook triggerlari keyingi versiyada qo‘shiladi.</span></div>';
  else html+='<div class="field-group"><span class="field-label">Holat</span><div class="field-static">Ushbu blok workflow tugaganini bildiradi.</div></div>';
+ if(node.runtimeOutput)html+='<div class="field-group"><span class="field-label">Oxirgi demo natija</span><div class="field-static">' + escapeHtml(node.runtimeOutput) + '</div></div>';
  html+='<div class="inspector-actions"><button class="button button-quiet" id="duplicate-node" type="button">⧉ Nusxalash</button><button class="button button-danger" id="delete-selected-node" type="button">O‘chirish</button></div>';
  html+='<div class="field-group" style="margin-top:16px"><span class="field-label">Qadam identifikatori</span><div class="field-static">'+escapeHtml(node.id)+'</div></div>';
  inspectorBody.innerHTML=html;
@@ -108,27 +110,153 @@ function exportWorkflow(){
  link.href=url;link.download=safeName+".json";document.body.appendChild(link);link.click();link.remove();URL.revokeObjectURL(url);showToast("Workflow JSON fayli tayyor.");
 }
 function delay(ms){return new Promise(function(resolve){window.setTimeout(resolve,ms);});}
+function processTemplate(template, context) {
+ return String(template || "").replace(/\{\{\s*(input|previous|output|workflow)\s*\}\}/gi,function(_,key){
+  const normalized=key.toLowerCase();
+  if(normalized==="workflow")return String(context.workflow||"");
+  if(normalized==="input")return String(context.input||"");
+  return String(context.previous||context.output||"");
+ });
+}
+function evaluateCondition(expression,value){
+ const exp=String(expression||"").trim().toLowerCase();
+ const text=String(value==null?"":value).trim();
+ if(!exp||exp.indexOf("bo‘sh emas")>=0||exp.indexOf("bo'sh emas")>=0||exp==="not-empty"||exp==="not empty")return text.length>0;
+ if(exp.indexOf("bo‘sh")>=0||exp.indexOf("bo'sh")>=0||exp==="empty")return text.length===0;
+ if(exp.indexOf("contains:")===0)return text.toLowerCase().indexOf(exp.slice(9).trim())>=0;
+ if(exp.indexOf("equals:")===0)return text.toLowerCase()===exp.slice(7).trim();
+ if(exp.indexOf("starts-with:")===0)return text.toLowerCase().indexOf(exp.slice(12).trim())===0;
+ return text.toLowerCase().indexOf(exp)>=0;
+}
 async function runWorkflow(){
- if(isRunning)return;if(!state.nodes.length){showToast("Avval workflow’ga qadam qo‘shing.");return;}
- isRunning=true;const token=++lastRunToken,runButton=document.getElementById("run-button");
- runButton.disabled=true;runButton.innerHTML='<span class="play-symbol">◌</span> Test bajarilmoqda…';
- state.nodes.forEach(function(node){delete node.runtimeState;});drawNodes();
- const logList=document.getElementById("run-log-list"),summary=document.getElementById("run-summary");
- logList.innerHTML="";summary.innerHTML='<span class="summary-dot neutral"></span><span>Workflow sinovdan o‘tkazilmoqda…</span>';
- function addLog(text,className){const item=document.createElement("li");item.className=className||"";item.textContent=text;logList.appendChild(item);logList.scrollTop=logList.scrollHeight;}
+ if(isRunning)return;
+ if(!state.nodes.length){showToast("Avval workflow’ga qadam qo‘shing.");return;}
+ isRunning=true;
+ const token=++lastRunToken;
+ const runButton=document.getElementById("run-button");
+ const logList=document.getElementById("run-log-list");
+ const summary=document.getElementById("run-summary");
+ const outputPanel=document.getElementById("run-output");
+ const outputText=document.getElementById("run-output-text");
+ const inputText=String(runInput.value||"").trim();
+ const context={input:inputText,previous:inputText,output:inputText,workflow:state.name||"ZUXRASH AI",lastIntegration:""};
+ try{localStorage.setItem("zuxrash-ai-run-input-v1",runInput.value||"");}catch(error){}
+ runButton.disabled=true;
+ runButton.innerHTML='<span class="play-symbol">◌</span> Test bajarilmoqda…';
+ state.nodes.forEach(function(node){delete node.runtimeState;delete node.runtimeOutput;});
+ drawNodes();
+ logList.innerHTML="";
+ summary.innerHTML='<span class="summary-dot neutral"></span><span>Workflow sinovdan o‘tkazilmoqda…</span>';
+ outputPanel.hidden=true;
+ function addLog(text,className){
+  const item=document.createElement("li");
+  item.className=className||"";
+  item.textContent=text;
+  logList.appendChild(item);
+  logList.scrollTop=logList.scrollHeight;
+ }
  try{
   const incoming=new Set(state.edges.map(function(edge){return edge.to;}));
-  const start=state.nodes.find(function(node){return node.type==="trigger"&&!incoming.has(node.id);})||state.nodes.find(function(node){return !incoming.has(node.id);})||state.nodes[0];
-  const ordered=[],seen=new Set();let current=start;
-  while(current&&!seen.has(current.id)&&ordered.length<=state.nodes.length){seen.add(current.id);ordered.push(current);const next=state.edges.find(function(edge){return edge.from===current.id&&!seen.has(edge.to);});current=next?findNode(next.to):null;}
-  const unvisited=state.nodes.filter(function(node){return !seen.has(node.id);});
-  if(unvisited.length)addLog(unvisited.length+" ta qadam boshlang‘ich yo‘ldan ulanmagan.","log-error");
-  for(let i=0;i<ordered.length;i++){
-   if(token!==lastRunToken)break;const node=ordered[i];node.runtimeState="running";selectedNodeId=node.id;drawNodes();renderInspector();addLog("Bajarilmoqda: "+node.label,"log-running");await delay(420);if(token!==lastRunToken)break;node.runtimeState="complete";drawNodes();addLog("Tayyor: "+node.label,"log-success");
+  const start=state.nodes.find(function(node){return node.type==="trigger"&&!incoming.has(node.id);})||
+   state.nodes.find(function(node){return !incoming.has(node.id);})||state.nodes[0];
+  let current=start;
+  const seen=new Set();
+  let executed=0;
+  let reachedEnd=false;
+  while(current){
+   if(token!==lastRunToken)break;
+   if(seen.has(current.id))throw new Error("Ulanishlarda sikl aniqlandi. Workflow’ni to‘xtatish uchun siklni uzing.");
+   if(executed>=state.nodes.length)throw new Error("Xavfsizlik limiti: qadamlar sonidan ortiq bajarilish to‘xtatildi.");
+   seen.add(current.id);
+   executed+=1;
+   const node=current;
+   const info=typeInfo[node.type]||typeInfo.ai;
+   node.runtimeState="running";
+   selectedNodeId=node.id;
+   drawNodes();
+   renderInspector();
+   addLog("Bajarilmoqda: "+node.label,"log-running");
+   await delay(260);
+   if(token!==lastRunToken)break;
+
+   let branchResult=null;
+   if(node.type==="trigger"){
+    context.previous=context.input;
+    context.output=context.input;
+    node.runtimeOutput=context.input||"(bo‘sh kiruvchi matn)";
+   }else if(node.type==="ai"){
+    const configuredPrompt=processTemplate((node.settings&&node.settings.prompt)||"So‘rovga javob ber.",context);
+    context.previous="Demo natija (haqiqiy AI API ulanmagan): "+(context.input||"Matn kiritilmadi.");
+    context.output=context.previous;
+    node.runtimeOutput=context.previous;
+    addLog("AI prompt saqlangan; tashqi modelga so‘rov yuborilmadi.","log-success");
+   }else if(node.type==="telegram"){
+    const message=processTemplate((node.settings&&node.settings.message)||"{{previous}}",context);
+    context.lastIntegration=message;
+    context.previous="Telegram xabari tayyorlandi, lekin yuborilmadi: "+message;
+    context.output=context.previous;
+    node.runtimeOutput=context.previous;
+    addLog("Telegram ulanishi yo‘q — xabar faqat tayyorlandi.","log-error");
+   }else if(node.type==="condition"){
+    const expression=(node.settings&&node.settings.condition)||"not-empty";
+    branchResult=evaluateCondition(expression,context.previous);
+    node.runtimeOutput="Shart "+(branchResult?"bajarildi":"bajarilmadi")+" ("+expression+")";
+    addLog("Shart natijasi: "+(branchResult?"HA":"YO‘Q"),branchResult?"log-success":"log-error");
+   }else if(node.type==="delay"){
+    const seconds=Math.max(0,Math.min(10,Number((node.settings&&node.settings.delay)||0)||0));
+    node.runtimeOutput="Demo kutish: "+seconds+" soniya";
+    if(seconds>0){
+     addLog("Kutilyapti: "+seconds+" soniya","log-running");
+     await delay(seconds*1000);
+     if(token!==lastRunToken)break;
+    }
+   }else if(node.type==="end"){
+    node.runtimeOutput=context.previous||"Workflow bajarildi, natija bo‘sh.";
+    reachedEnd=true;
+   }else{
+    node.runtimeOutput=context.previous;
+   }
+
+   node.runtimeState="complete";
+   drawNodes();
+   addLog("Tayyor: "+node.label,"log-success");
+   if(node.type==="end")break;
+
+   const outgoing=state.edges.filter(function(edge){return edge.from===node.id;});
+   let nextEdge=null;
+   if(node.type==="condition"){
+    nextEdge=branchResult?outgoing[0]:outgoing[1]||null;
+    if(!nextEdge)addLog(branchResult?"Shart uchun HA yo‘li ulanmagan.":"Shart uchun YO‘Q yo‘li ulanmagan.","log-error");
+   }else{
+    nextEdge=outgoing[0]||null;
+    if(outgoing.length>1)addLog("Eslatma: bu blokda bir nechta chiqish bor; faqat birinchi ulanish tanlandi.","log-error");
+   }
+   current=nextEdge?findNode(nextEdge.to):null;
   }
-  if(token===lastRunToken){summary.innerHTML='<span class="summary-dot success"></span><span>Demo test muvaffaqiyatli · '+ordered.length+' ta qadam ko‘rildi</span>';addLog("Test yakunlandi. Tashqi API chaqirilmadi.","log-success");showToast("Demo test tugadi. Natijani o‘ng panelda ko‘r.");}
- }catch(error){summary.innerHTML='<span class="summary-dot error"></span><span>Test bajarilmadi</span>';addLog("Xatolik: "+(error&&error.message?error.message:"Noma’lum xatolik"),"log-error");showToast("Testda xatolik yuz berdi.");}
- finally{isRunning=false;runButton.disabled=false;runButton.innerHTML='<span class="play-symbol">▶</span> Testni ishga tushirish';persist();}
+
+  const unvisited=state.nodes.filter(function(node){return !seen.has(node.id);});
+  if(unvisited.length)addLog(unvisited.length+" ta qadam ushbu yo‘lda bajarilmadi (uzilgan yoki boshqa shoxda).","log-error");
+  const lastNode=state.nodes.slice().reverse().find(function(node){return node.runtimeOutput;});
+  const finalOutput=(lastNode&&lastNode.runtimeOutput)||context.previous||"Natija yaratilmagan.";
+  outputText.textContent=finalOutput;
+  outputPanel.hidden=false;
+  if(token===lastRunToken){
+   summary.innerHTML='<span class="summary-dot success"></span><span>Demo test yakunlandi · '+executed+' ta qadam bajarildi'+(reachedEnd?" · yakunlandi":"")+'</span>';
+   addLog("Sinov tugadi. Tashqi AI yoki Telegram API chaqirilmadi.","log-success");
+   showToast("Workflow test yakunlandi. Natijani o‘ng panelda ko‘r.");
+  }
+ }catch(error){
+  summary.innerHTML='<span class="summary-dot error"></span><span>Test xatolik bilan to‘xtadi</span>';
+  addLog("Xatolik: "+(error&&error.message?error.message:"Noma’lum xatolik"),"log-error");
+  outputText.textContent=error&&error.message?error.message:"Noma’lum xatolik";
+  outputPanel.hidden=false;
+  showToast("Workflow testida xatolik yuz berdi.");
+ }finally{
+  isRunning=false;
+  runButton.disabled=false;
+  runButton.innerHTML='<span class="play-symbol">▶</span> Testni ishga tushirish';
+  persist();
+ }
 }
 nodesLayer.addEventListener("click",function(event){
  const deleteButton=event.target.closest("[data-delete-node]");
@@ -173,6 +301,8 @@ inspectorBody.addEventListener("click",function(event){
   const node=selectedNode();if(!node)return;const copy=JSON.parse(JSON.stringify(node));copy.id=node.type+"-"+Date.now().toString(36);copy.label=node.label+" nusxa";copy.x=Math.min(1080,Number(node.x)+45);copy.y=Math.min(630,Number(node.y)+45);delete copy.runtimeState;state.nodes.push(copy);selectedNodeId=copy.id;rerender();showToast("Qadam nusxalandi. Yangi blokni joylashtirishingiz mumkin.");
  }
 });
+try{const savedRunInput=localStorage.getItem("zuxrash-ai-run-input-v1");if(savedRunInput!==null)runInput.value=savedRunInput;}catch(error){}
+runInput.addEventListener("input",function(){try{localStorage.setItem("zuxrash-ai-run-input-v1",runInput.value);}catch(error){}});
 document.getElementById("workflow-name").value=state.name;
 document.getElementById("workflow-name").addEventListener("input",function(event){state.name=event.target.value||"Yangi workflow";document.getElementById("breadcrumb-title").textContent=state.name;persist();});
 document.getElementById("run-button").addEventListener("click",runWorkflow);
