@@ -1,77 +1,57 @@
 <!doctype html>
 <html lang="uz">
 <head>
-  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#0b0912">
-  <meta name="description" content="ZUXRASH AI — vizual AI agentlar va avtomatlashtirish platformasi.">
-  <title>ZUXRASH AI Studio</title><link rel="stylesheet" href="./styles.css">
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#0b0912">
+<meta name="description" content="ZUXRASH AI — bot, AI yordamchi va avtomatlashtirish loyihalarini rejalashtirish platformasi.">
+<title>ZUXRASH AI — Loyiha yaratish</title><link rel="stylesheet" href="./styles.css">
 </head>
 <body>
-<div class="app-shell">
-  <aside class="sidebar">
-    <a class="brand" href="#"><span class="brand-mark">Z<span>.</span></span><span class="brand-copy"><strong>ZUXRASH<span> AI</span></strong><small>WORKFLOW STUDIO</small></span></a>
-    <div class="workspace-switcher"><span class="workspace-avatar">Z</span><span class="workspace-label"><strong>My workspace</strong><small>Free workspace</small></span><span class="chevron">⌄</span></div>
-    <div class="nav-label">WORKSPACE</div>
-    <nav class="sidebar-nav" aria-label="Asosiy menyu">
-      <button class="nav-item active" type="button"><span class="nav-icon">▦</span><span>Ish maydoni</span><span class="nav-pill">Beta</span></button>
-      <button class="nav-item" type="button" data-coming-soon><span class="nav-icon">▤</span><span>Shablonlar</span></button>
-      <button class="nav-item" type="button" data-coming-soon><span class="nav-icon">⌘</span><span>Integratsiyalar</span><span class="nav-lock">↗</span></button>
-      <button class="nav-item" type="button" data-coming-soon><span class="nav-icon">◷</span><span>Ishga tushirish tarixi</span></button>
-    </nav>
-    <div class="nav-label nav-label-spaced">DEVELOPER</div>
-    <nav class="sidebar-nav" aria-label="Developer menyusi">
-      <button class="nav-item" type="button" id="export-sidebar"><span class="nav-icon">{ }</span><span>JSON eksport</span></button>
-      <button class="nav-item" type="button" data-coming-soon><span class="nav-icon">⚙</span><span>Sozlamalar</span></button>
-    </nav>
-    <div class="sidebar-spacer"></div>
-    <div class="sidebar-status"><span class="status-orb"></span><span><strong>Mahalliy demo</strong><small>Ma'lumotlar shu qurilmada</small></span></div>
-    <div class="user-card"><div class="user-avatar">B</div><div class="user-copy"><strong>Bekiuz Company</strong><small>Founder workspace</small></div><button class="more-button" aria-label="Profil menyusi" type="button" data-coming-soon>···</button></div>
-  </aside>
-
-  <main class="main-area">
-    <header class="topbar">
-      <div class="breadcrumbs"><span>Workspace</span><span class="crumb-separator">/</span><strong>Studio</strong><span class="crumb-separator">/</span><span id="breadcrumb-title">Yangi workflow</span></div>
-      <div class="topbar-actions"><span class="save-indicator"><span class="save-dot"></span><span id="save-state">Avto-saqlash yoqilgan</span></span><button class="button button-quiet" type="button" id="export-button"><span>⇩</span> Eksport</button><button class="button button-primary" type="button" id="run-button"><span class="play-symbol">▶</span> Testni ishga tushirish</button></div>
-    </header>
-
-    <section class="page-heading">
-      <div><div class="eyebrow"><span class="eyebrow-dot"></span> VISUAL AUTOMATION BUILDER</div><h1>Workflow <span>Studio</span></h1><p>G‘oyani ish jarayoniga aylantir. Bloklarni ulab, oqimingni sinab ko‘r.</p></div>
-      <div class="heading-badge"><span class="pulse-dot"></span> Prototype <span class="badge-divider"></span> v0.1</div>
-    </section>
-
-    
-    <section class="execution-input-panel" aria-label="Workflow test inputs">
-      <div class="execution-input-copy">
-        <span class="input-panel-icon">↳</span>
-        <div><strong>Sinov uchun kiruvchi matn</strong><small>Trigger’dan keyingi bloklarga shu qiymat uzatiladi.</small></div>
-      </div>
-      <textarea id="run-input" rows="2" aria-label="Sinov uchun kiruvchi matn" placeholder="Masalan: Mijoz buyurtma haqida so‘rayapti...">Assalomu alaykum! Menga buyurtma haqida ma’lumot kerak.</textarea>
-    </section>
-
-    <section class="studio-layout">
-      <div class="canvas-panel">
-        <div class="canvas-toolbar"><div class="workflow-name-wrap"><span class="workflow-mini-icon">⌘</span><input id="workflow-name" class="workflow-name" value="Yangi workflow" aria-label="Workflow nomi" maxlength="80"><span class="edit-hint">✎</span></div><div class="canvas-tool-actions"><span class="step-counter"><span id="step-count">4</span> qadam</span><button class="icon-button" id="recenter-button" title="Maydonni qayta markazlash" aria-label="Maydonni qayta markazlash" type="button">⤢</button></div></div>
-        <div class="canvas-scroll" id="canvas-scroll"><div class="canvas-stage" id="canvas-stage"><svg class="connections-layer" id="connections-layer" aria-label="Qadamlar orasidagi ulanishlar"></svg><div class="nodes-layer" id="nodes-layer"></div></div></div>
-        <div class="canvas-footer"><button class="button button-add" id="add-step-button" type="button"><span>＋</span> Qadam qo‘shish</button><div class="canvas-hints"><span><kbd>Drag</kbd> sudrash</span><span><kbd>●</kbd> nuqtalarni bosib ulash</span></div><span class="canvas-footer-state"><span class="tiny-green-dot"></span> Avto-saqlanadi</span></div>
-      </div>
-
-      <aside class="inspector-panel">
-        <div class="inspector-top"><div class="inspector-eyebrow">QADAM SOZLAMALARI</div><div class="inspector-title-row"><h2 id="inspector-title">Trigger</h2><span class="selected-tag">TANLANGAN</span></div><p id="inspector-subtitle">Workflow boshlanish nuqtasi.</p></div>
-        <div class="inspector-body" id="inspector-body"></div>
-        <div class="run-history"><div class="history-heading"><span>OXIRGI TEST</span><span class="history-clock">◷</span></div><div id="run-summary" class="run-summary"><span class="summary-dot neutral"></span><span>Hali test bajarilmadi</span></div><div id="run-output" class="run-output" hidden><strong>Natija</strong><p id="run-output-text"></p></div><ol class="run-log-list" id="run-log-list"><li class="empty-log">Ishga tushirgandan so‘ng natijalar shu yerda chiqadi.</li></ol></div>
-      </aside>
-    </section>
-    <footer class="app-footer"><span>© 2026 ZUXRASH AI</span><span>Hozircha demo rejimi · Tashqi xizmatlar hali ulanmagan</span><a href="https://github.com/bekiuz/zuxrash-ai" target="_blank" rel="noreferrer">GitHub ↗</a></footer>
-  </main>
+<div class="app">
+<aside class="sidebar">
+ <a class="brand" href="./"><span class="brand-logo">Z<span>.</span></span><span><b>ZUXRASH <em>AI</em></b><small>IDEA TO PROJECT</small></span></a>
+ <div class="nav-caption">ISH MAYDONI</div>
+ <button class="nav-item active" data-view="builder" type="button"><span>✳</span>Loyiha yaratish</button>
+ <button class="nav-item" data-view="saved" type="button"><span>▤</span>Saqlangan rejalar <small id="saved-count">0</small></button>
+ <div class="sidebar-bottom">
+  <div class="demo-state"><i></i><div><b>Demo rejimi</b><small>Haqiqiy AI hali ulanmagan</small></div></div>
+  <a class="repo-link" href="https://github.com/bekiuz/zuxrash-ai" target="_blank" rel="noreferrer">⌘ &nbsp; GitHub repozitoriy <span>↗</span></a>
+  <div class="user-row"><span class="avatar">B</span><span><b>Bekiuz Company</b><small>Product workspace</small></span></div>
+ </div>
+</aside>
+<main class="main">
+ <header class="topbar"><div class="crumb">Workspace <span>/</span> <b id="crumb-current">Loyiha yaratish</b></div><span class="beta">● &nbsp; BETA</span></header>
+ <section id="builder-view" class="view">
+  <div class="hero"><div class="eyebrow"><span>✳</span> AI PROJECT BUILDER <i></i> V0.3</div><h1>G‘oyangni yoz.<br><span>Rejangni ol.</span></h1><p>Bot, AI yordamchi yoki avtomatlashtirish loyihasi. Nima kerakligini oddiy tilda yoz.</p></div>
+  <div class="builder-card">
+   <div class="section-heading"><span class="step-num">01</span><div><h2>Nimani yaratmoqchisan?</h2><p>Bir-ikki jumla yetarli.</p></div></div>
+   <label class="sr-only" for="idea-input">Loyiha g‘oyasi</label>
+   <textarea id="idea-input" maxlength="2000" rows="4" placeholder="Masalan: O‘quv markazim uchun Telegram bot kerak. O‘quvchilar kurslarni ko‘rsin, dars jadvalini bilsin va admin bilan bog‘lansin."></textarea>
+   <div class="input-foot"><span>O‘zbekcha yozishing mumkin.</span><span id="char-count">0 / 2000</span></div>
+   <div class="section-heading second-heading"><span class="step-num">02</span><div><h2>Qaysi turdagi loyiha?</h2><p>Birini tanla.</p></div></div>
+   <div class="type-grid">
+    <button class="type-card selected" data-type="telegram_bot" aria-pressed="true" type="button"><span class="type-icon blue">➤</span><span><b>Telegram bot</b><small>Buyurtma, o‘quv markaz, xizmat</small></span><i></i></button>
+    <button class="type-card" data-type="ai_assistant" aria-pressed="false" type="button"><span class="type-icon purple">✦</span><span><b>AI yordamchi</b><small>Savol-javob, matn, fayl tahlili</small></span><i></i></button>
+    <button class="type-card" data-type="automation" aria-pressed="false" type="button"><span class="type-icon green">⤳</span><span><b>Avtomatlashtirish</b><small>Takroriy ishlarni avtomatik bajarish</small></span><i></i></button>
+   </div>
+   <div class="examples"><span>Misol:</span><button data-example="O‘quv markazi uchun Telegram bot: kurslar, dars jadvali, o‘quvchi profili va admin boshqaruvi." type="button">🎓 O‘quv markazi</button><button data-example="Fast food buyurtma boti: menyu, savatcha, buyurtma yuborish va buyurtma holatini ko‘rish." type="button">🍔 Fast food</button><button data-example="Hujjatlarni yuklab, ularni tushuntirib beradigan va savollarga javob beradigan AI yordamchi." data-example-type="ai_assistant" type="button">📄 Hujjat AI</button></div>
+   <div class="form-footer"><span>◈ &nbsp; Bu versiya g‘oyangga mos reja shablonini tuzadi.</span><button id="create-plan" class="primary" type="button">Reja tuzish <b>→</b></button></div>
+   <p id="form-error" class="error" hidden></p>
+  </div>
+  <section id="plan-output" class="plan-card" hidden>
+   <div class="plan-banner"><span>✓ &nbsp; LOYIHA REJASI TAYYOR</span><label>DEMO NATIJA</label></div>
+   <div class="plan-intro"><div><h2 id="plan-title">Loyiha nomi</h2><p id="plan-summary"></p></div><span id="plan-type" class="type-label">Telegram bot</span></div>
+   <div class="notice">ⓘ &nbsp; Bu shablon asosidagi reja, tayyor bot yoki haqiqiy AI javobi emas.</div>
+   <div class="plan-grid"><section><div class="plan-subtitle"><span>✳</span><div><b>Nimalar bo‘ladi?</b><small>Asosiy imkoniyatlar</small></div></div><ul id="features"></ul></section><section><div class="plan-subtitle"><span class="green">↗</span><div><b>Qanday quramiz?</b><small>Ish bosqichlari</small></div></div><ol id="steps"></ol></section></div>
+   <div class="tech-row"><b>TAKLIF QILINADIGAN TEXNOLOGIYALAR</b><div id="technologies"></div></div>
+   <div class="plan-actions"><button id="new-plan" class="secondary" type="button">← Yangi g‘oya</button><div><button id="copy-plan" class="secondary" type="button">Nusxalash</button><button id="download-plan" class="primary" type="button">JSON yuklab olish ↓</button></div></div>
+  </section>
+  <section class="how"><div class="section-heading"><span class="how-star">✦</span><div><h2>Qanday ishlaydi?</h2><p>Uchta oddiy qadam.</p></div></div><div class="how-grid"><article><span>01</span><b>G‘oyangni yoz</b><p>Nima kerakligini oddiy so‘zlar bilan tushuntir.</p></article><article><span>02</span><b>Rejani ko‘r</b><p>Funksiyalar va qurish bosqichlarini ol.</p></article><article><span>03</span><b>Birga quramiz</b><p>Keyingi bosqichda kod va integratsiyalarni qo‘shamiz.</p></article></div></section>
+ </section>
+ <section id="saved-view" class="view" hidden><div class="saved-heading"><div class="eyebrow"><span>▤</span> YOUR WORKSPACE</div><h1>Saqlangan <span>rejalar</span></h1><p>Shu brauzerda saqlagan rejalaring.</p></div><div id="saved-list" class="saved-list"></div><div id="saved-empty" class="empty"><span>▤</span><h2>Hali reja yo‘q</h2><p>Loyiha yaratish bo‘limida g‘oyangni yozib, reja tayyorla.</p><button id="go-create" class="primary" type="button">Loyiha yaratish →</button></div></section>
+ <footer class="footer"><span>© 2026 ZUXRASH AI</span><span>Mahsulot prototipi · O‘zbek tilida</span><a href="https://github.com/bekiuz/zuxrash-ai" target="_blank" rel="noreferrer">GitHub ↗</a></footer>
+</main>
 </div>
-
-<div class="add-menu" id="add-menu" hidden><div class="menu-heading">Yangi qadam tanlang</div>
-  <button class="menu-option" type="button" data-add-type="ai"><span class="menu-option-icon violet">✦</span><span><strong>AI javob</strong><small>Matn yoki tahlil yaratish</small></span><span class="menu-plus">＋</span></button>
-  <button class="menu-option" type="button" data-add-type="telegram"><span class="menu-option-icon blue">➤</span><span><strong>Telegram xabar</strong><small>Bot xabari uchun qadam</small></span><span class="menu-plus">＋</span></button>
-  <button class="menu-option" type="button" data-add-type="condition"><span class="menu-option-icon amber">◇</span><span><strong>Shart</strong><small>Natijaga qarab yo‘nalish</small></span><span class="menu-plus">＋</span></button>
-  <button class="menu-option" type="button" data-add-type="delay"><span class="menu-option-icon green">◷</span><span><strong>Kutish</strong><small>Jarayonni kechiktirish</small></span><span class="menu-plus">＋</span></button>
-  <button class="menu-option" type="button" data-add-type="end"><span class="menu-option-icon slate">■</span><span><strong>Yakunlash</strong><small>Workflow oxiri</small></span><span class="menu-plus">＋</span></button>
-</div>
-<div class="toast-region" id="toast-region" aria-live="polite"></div>
+<div class="toasts" id="toasts" aria-live="polite"></div>
 <script src="./app.js"></script>
-</body></html>
+</body>
+</html>
