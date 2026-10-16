@@ -21,7 +21,7 @@ const typeInfo = {
 };
 function makeNode(id,type,x,y,label,description){
  const info=typeInfo[type]||typeInfo.ai;
- return {id:id,type:type,label:label||info.label,description:description||info.description,x:x,y:y,settings:{prompt:type==="ai"?"Foydalanuvchi so‘rovini tushun, aniq va foydali javob tayyorla.":"",message:type==="telegram"?"Assalomu alaykum! Sizning natijangiz tayyor.":"",condition:type==="condition"?"Natija bo‘sh emas":"",delay:type==="delay"?"5":""}};
+ return {id:id,type:type,label:label||info.label,description:description||info.description,x:x,y:y,settings:{prompt:type==="ai"?"Foydalanuvchi so‘rovini tushun, aniq va foydali javob tayyorla.":"",message:type==="telegram"?"{{previous}}":"",condition:type==="condition"?"Natija bo‘sh emas":"",delay:type==="delay"?"5":""}};
 }
 function createDefaultState(){return {name:"ZUXRASH demo workflow",nodes:[makeNode("trigger-1","trigger",70,220,"Boshlash","Workflow ishga tushirilganda boshlanadi."),makeNode("ai-1","ai",350,220,"AI javob","Kiritilgan vazifani AI yordamida tahlil qilish."),makeNode("telegram-1","telegram",630,220,"Telegram xabar","Tayyor javobni Telegram’ga yuborish."),makeNode("end-1","end",910,220,"Yakunlash","Workflow yakunlanadi.")],edges:[{id:"edge-1",from:"trigger-1",to:"ai-1"},{id:"edge-2",from:"ai-1",to:"telegram-1"},{id:"edge-3",from:"telegram-1",to:"end-1"}]};}
 function loadState(){try{const raw=localStorage.getItem(STORAGE_KEY);if(!raw)return createDefaultState();const parsed=JSON.parse(raw);if(!parsed||!Array.isArray(parsed.nodes)||!Array.isArray(parsed.edges)||!parsed.nodes.length)return createDefaultState();return {name:parsed.name||"Yangi workflow",nodes:parsed.nodes,edges:parsed.edges};}catch(error){return createDefaultState();}}
@@ -223,6 +223,7 @@ async function runWorkflow(){
 
    node.runtimeState="complete";
    drawNodes();
+   renderInspector();
    addLog("Tayyor: "+node.label,"log-success");
    if(node.type==="end")break;
 
