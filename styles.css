@@ -26,3 +26,5 @@
 .node-body{white-space:pre-line}
 @media(max-width:1180px){.execution-input-panel{margin-left:18px;margin-right:18px}}
 @media(max-width:600px){.execution-input-panel{margin:0 10px 12px;padding:12px;grid-template-columns:1fr;gap:10px}}
+
+.connection-label{fill:#c0aaff;font-size:9px;font-weight:700;paint-order:stroke;stroke:#100d18;stroke-width:4px;stroke-linejoin:round;letter-spacing:.3px}
