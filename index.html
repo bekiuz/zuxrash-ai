@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="uz">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0b0912">
+  <meta name="description" content="ZUXRASH AI — vizual AI agentlar va avtomatlashtirish platformasi.">
+  <title>ZUXRASH AI Studio</title><link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+<div class="app-shell">
+  <aside class="sidebar">
+    <a class="brand" href="#"><span class="brand-mark">Z<span>.</span></span><span class="brand-copy"><strong>ZUXRASH<span> AI</span></strong><small>WORKFLOW STUDIO</small></span></a>
+    <div class="workspace-switcher"><span class="workspace-avatar">Z</span><span class="workspace-label"><strong>My workspace</strong><small>Free workspace</small></span><span class="chevron">⌄</span></div>
+    <div class="nav-label">WORKSPACE</div>
+    <nav class="sidebar-nav" aria-label="Asosiy menyu">
+      <button class="nav-item active" type="button"><span class="nav-icon">▦</span><span>Ish maydoni</span><span class="nav-pill">Beta</span></button>
+      <button class="nav-item" type="button" data-coming-soon><span class="nav-icon">▤</span><span>Shablonlar</span></button>
+      <button class="nav-item" type="button" data-coming-soon><span class="nav-icon">⌘</span><span>Integratsiyalar</span><span class="nav-lock">↗</span></button>
+      <button class="nav-item" type="button" data-coming-soon><span class="nav-icon">◷</span><span>Ishga tushirish tarixi</span></button>
+    </nav>
+    <div class="nav-label nav-label-spaced">DEVELOPER</div>
+    <nav class="sidebar-nav" aria-label="Developer menyusi">
+      <button class="nav-item" type="button" id="export-sidebar"><span class="nav-icon">{ }</span><span>JSON eksport</span></button>
+      <button class="nav-item" type="button" data-coming-soon><span class="nav-icon">⚙</span><span>Sozlamalar</span></button>
+    </nav>
+    <div class="sidebar-spacer"></div>
+    <div class="sidebar-status"><span class="status-orb"></span><span><strong>Mahalliy demo</strong><small>Ma'lumotlar shu qurilmada</small></span></div>
+    <div class="user-card"><div class="user-avatar">B</div><div class="user-copy"><strong>Bekiuz Company</strong><small>Founder workspace</small></div><button class="more-button" aria-label="Profil menyusi" type="button" data-coming-soon>···</button></div>
+  </aside>
+
+  <main class="main-area">
+    <header class="topbar">
+      <div class="breadcrumbs"><span>Workspace</span><span class="crumb-separator">/</span><strong>Studio</strong><span class="crumb-separator">/</span><span id="breadcrumb-title">Yangi workflow</span></div>
+      <div class="topbar-actions"><span class="save-indicator"><span class="save-dot"></span><span id="save-state">Avto-saqlash yoqilgan</span></span><button class="button button-quiet" type="button" id="export-button"><span>⇩</span> Eksport</button><button class="button button-primary" type="button" id="run-button"><span class="play-symbol">▶</span> Testni ishga tushirish</button></div>
+    </header>
+
+    <section class="page-heading">
+      <div><div class="eyebrow"><span class="eyebrow-dot"></span> VISUAL AUTOMATION BUILDER</div><h1>Workflow <span>Studio</span></h1><p>G‘oyani ish jarayoniga aylantir. Bloklarni ulab, oqimingni sinab ko‘r.</p></div>
+      <div class="heading-badge"><span class="pulse-dot"></span> Prototype <span class="badge-divider"></span> v0.1</div>
+    </section>
+
+    <section class="studio-layout">
+      <div class="canvas-panel">
+        <div class="canvas-toolbar"><div class="workflow-name-wrap"><span class="workflow-mini-icon">⌘</span><input id="workflow-name" class="workflow-name" value="Yangi workflow" aria-label="Workflow nomi" maxlength="80"><span class="edit-hint">✎</span></div><div class="canvas-tool-actions"><span class="step-counter"><span id="step-count">4</span> qadam</span><button class="icon-button" id="recenter-button" title="Maydonni qayta markazlash" aria-label="Maydonni qayta markazlash" type="button">⤢</button></div></div>
+        <div class="canvas-scroll" id="canvas-scroll"><div class="canvas-stage" id="canvas-stage"><svg class="connections-layer" id="connections-layer" aria-label="Qadamlar orasidagi ulanishlar"></svg><div class="nodes-layer" id="nodes-layer"></div></div></div>
+        <div class="canvas-footer"><button class="button button-add" id="add-step-button" type="button"><span>＋</span> Qadam qo‘shish</button><div class="canvas-hints"><span><kbd>Drag</kbd> sudrash</span><span><kbd>●</kbd> nuqtalarni bosib ulash</span></div><span class="canvas-footer-state"><span class="tiny-green-dot"></span> Avto-saqlanadi</span></div>
+      </div>
+
+      <aside class="inspector-panel">
+        <div class="inspector-top"><div class="inspector-eyebrow">QADAM SOZLAMALARI</div><div class="inspector-title-row"><h2 id="inspector-title">Trigger</h2><span class="selected-tag">TANLANGAN</span></div><p id="inspector-subtitle">Workflow boshlanish nuqtasi.</p></div>
+        <div class="inspector-body" id="inspector-body"></div>
+        <div class="run-history"><div class="history-heading"><span>OXIRGI TEST</span><span class="history-clock">◷</span></div><div id="run-summary" class="run-summary"><span class="summary-dot neutral"></span><span>Hali test bajarilmadi</span></div><ol class="run-log-list" id="run-log-list"><li class="empty-log">Ishga tushirgandan so‘ng natijalar shu yerda chiqadi.</li></ol></div>
+      </aside>
+    </section>
+    <footer class="app-footer"><span>© 2026 ZUXRASH AI</span><span>Hozircha demo rejimi · Tashqi xizmatlar hali ulanmagan</span><a href="https://github.com/bekiuz/zuxrash-ai" target="_blank" rel="noreferrer">GitHub ↗</a></footer>
+  </main>
+</div>
+
+<div class="add-menu" id="add-menu" hidden><div class="menu-heading">Yangi qadam tanlang</div>
+  <button class="menu-option" type="button" data-add-type="ai"><span class="menu-option-icon violet">✦</span><span><strong>AI javob</strong><small>Matn yoki tahlil yaratish</small></span><span class="menu-plus">＋</span></button>
+  <button class="menu-option" type="button" data-add-type="telegram"><span class="menu-option-icon blue">➤</span><span><strong>Telegram xabar</strong><small>Bot xabari uchun qadam</small></span><span class="menu-plus">＋</span></button>
+  <button class="menu-option" type="button" data-add-type="condition"><span class="menu-option-icon amber">◇</span><span><strong>Shart</strong><small>Natijaga qarab yo‘nalish</small></span><span class="menu-plus">＋</span></button>
+  <button class="menu-option" type="button" data-add-type="delay"><span class="menu-option-icon green">◷</span><span><strong>Kutish</strong><small>Jarayonni kechiktirish</small></span><span class="menu-plus">＋</span></button>
+  <button class="menu-option" type="button" data-add-type="end"><span class="menu-option-icon slate">■</span><span><strong>Yakunlash</strong><small>Workflow oxiri</small></span><span class="menu-plus">＋</span></button>
+</div>
+<div class="toast-region" id="toast-region" aria-live="polite"></div>
+<script src="./app.js"></script>
+</body></html>
