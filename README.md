@@ -2,29 +2,27 @@
 
 ZUXRASH AI — vizual AI agentlar va avtomatlashtirish platformasi uchun ishlab chiqilayotgan prototip.
 
-## Hozirgi prototip
-- Zamonaviy, responsive Workflow Studio interfeysi.
-- Bloklarni sudrab joyini o‘zgartirish.
-- Chiqish va kirish nuqtalari orqali qadamlarni ulash.
+## Hozirgi imkoniyatlar
+- Responsive qora-binafsha Workflow Studio interfeysi.
+- Bloklarni sudrab joyini o‘zgartirish, qadamlarni ulash, nusxalash va o‘chirish.
 - Trigger, AI, Telegram xabar, shart, kutish va yakunlash bloklari.
-- Har bir blok nomi, izohi va demo sozlamalarini tahrirlash.
-- Demo rejimida workflow bosqichlarini sinash va bajarilish tarixini ko‘rish.
-- Workflow'ni brauzer localStorage xotirasida saqlash.
+- Kiruvchi matnni workflow’ga uzatish.
+- Demo ijro dvigateli: ketma-ket qadamlar, shart tekshiruvi va shoxlanish.
+- Har bir blokning oxirgi demo natijasi va bajarilish loglari.
+- Workflow sozlamalarini brauzer localStorage xotirasida saqlash.
 - Workflow konfigurasiyasini JSON qilib eksport qilish.
 
 ## Ishga tushirish
-Ilova statik HTML/CSS/JavaScript asosida yozilgan; paket o‘rnatish yoki build qilish talab qilinmaydi. Repo fayllarini yuklab olib, index.html faylini brauzerda ochish mumkin. GitHub Pages yoqilgan bo‘lsa, repo sayt manzilidan ham foydalanish mumkin.
+Statik HTML/CSS/JavaScript — build yoki paket o‘rnatish shart emas. `index.html` faylini brauzerda ochish yoki GitHub Pages orqali joylashtirish mumkin.
 
-## Hozircha cheklovlar
-Bu birinchi frontend prototipi. Test tugmasi workflow yo‘lini simulyatsiya qiladi, lekin haqiqiy AI API yoki Telegram botiga so‘rov yubormaydi. API kalitlari, server tomoni, foydalanuvchi hisobi va bulutda ishga tushirish hali amalga oshirilmagan.
+## Muhim cheklovlar
+Bu hali demo prototip. AI bloki haqiqiy modelga so‘rov yubormaydi; faqat aniq belgilangan demo natijasini ishlab chiqaradi. Telegram bloki xabarni tayyorlaydi, lekin yubormaydi. Haqiqiy integratsiyalar uchun server/API, xavfsiz secret saqlash va xatolarni boshqarish kerak. Hech qachon bot tokenlari yoki AI API kalitlarini ommaviy frontend kodiga joylamang.
 
-## Keyingi bosqichlar
-1. Workflow JSON importi va ulanishlarni yaxshilash.
-2. Server API va maxfiy kalitlarni xavfsiz saqlash.
-3. AI model provayderiga haqiqiy ulanish.
-4. Telegram bot integratsiyasi.
-5. Workflow'larni hisobda saqlash va serverda ishga tushirish.
+## Keyingi qadamlar
+1. Ishlaydigan AI API backend’ini ulash.
+2. Telegram bot integratsiyasi.
+3. Workflow importi, ko‘proq shart operatorlari va shoxlarni vizual nomlash.
+4. Hisobga bog‘langan saqlash va server-side ishga tushirish.
 
 Repository: https://github.com/bekiuz/zuxrash-ai
-Product: ZUXRASH AI
-Version: 0.1 prototype
+Version: 0.2 prototype
