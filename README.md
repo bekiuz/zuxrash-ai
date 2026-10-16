@@ -1,28 +1,29 @@
 # ZUXRASH AI
 
-ZUXRASH AI — vizual AI agentlar va avtomatlashtirish platformasi uchun ishlab chiqilayotgan prototip.
+ZUXRASH AI — bot, AI yordamchi va avtomatlashtirish loyihalarini sodda tilda rejalashtirish uchun prototip.
 
-## Hozirgi imkoniyatlar
-- Responsive qora-binafsha Workflow Studio interfeysi.
-- Bloklarni sudrab joyini o‘zgartirish, qadamlarni ulash, nusxalash va o‘chirish.
-- Trigger, AI, Telegram xabar, shart, kutish va yakunlash bloklari.
-- Kiruvchi matnni workflow’ga uzatish.
-- Demo ijro dvigateli: ketma-ket qadamlar, shart tekshiruvi va shoxlanish.
-- Har bir blokning oxirgi demo natijasi va bajarilish loglari.
-- Workflow sozlamalarini brauzer localStorage xotirasida saqlash.
-- Workflow konfigurasiyasini JSON qilib eksport qilish.
+## Ishlatish
+1. Loyiha turini tanlang.
+2. G‘oyangizni o‘zbek tilida yozing yoki misollardan birini tanlang.
+3. “Reja tuzish” tugmasini bosing.
+4. Imkoniyatlar va qurish bosqichlarini ko‘ring.
+5. Rejani nusxalang yoki JSON qilib yuklab oling.
 
-## Ishga tushirish
-Statik HTML/CSS/JavaScript — build yoki paket o‘rnatish shart emas. `index.html` faylini brauzerda ochish yoki GitHub Pages orqali joylashtirish mumkin.
+## Hozir ishlaydigan imkoniyatlar
+- O‘zbek tilidagi, mobil qurilmaga mos interfeys.
+- Uchta tur: Telegram bot, AI yordamchi va avtomatlashtirish.
+- G‘oyaga mos shablon reja, funksiyalar va texnologiyalarni chiqarish.
+- Rejalarni brauzerda saqlash, qayta ochish va o‘chirish.
+- JSON eksport va reja matnini nusxalash.
 
-## Muhim cheklovlar
-Bu hali demo prototip. AI bloki haqiqiy modelga so‘rov yubormaydi; faqat aniq belgilangan demo natijasini ishlab chiqaradi. Telegram bloki xabarni tayyorlaydi, lekin yubormaydi. Haqiqiy integratsiyalar uchun server/API, xavfsiz secret saqlash va xatolarni boshqarish kerak. Hech qachon bot tokenlari yoki AI API kalitlarini ommaviy frontend kodiga joylamang.
+## Muhim cheklov
+Bu versiya haqiqiy AI kod generatori emas. U oldindan yozilgan shablonlardan reja tuzadi; kod yaratmaydi, AI API chaqirmaydi va botni internetga joylamaydi. Haqiqiy AI uchun backend va model provayderi ulanishi kerak. API kalitlarini frontend kodiga yozmang.
 
-## Keyingi qadamlar
-1. Ishlaydigan AI API backend’ini ulash.
-2. Telegram bot integratsiyasi.
-3. Workflow importi, ko‘proq shart operatorlari va shoxlarni vizual nomlash.
-4. Hisobga bog‘langan saqlash va server-side ishga tushirish.
+## Keyingi bosqich
+1. Xavfsiz backend va AI API.
+2. G‘oyadan loyiha fayllarini yaratish.
+3. Telegram integratsiyasi.
+4. Test va deploy jarayonlarini qo‘shish.
 
 Repository: https://github.com/bekiuz/zuxrash-ai
-Version: 0.2 prototype
+Version: 0.3 prototype
